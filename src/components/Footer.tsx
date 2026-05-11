@@ -49,7 +49,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-start gap-3">
                 <Mail size={18} className="text-brand-primary shrink-0" />
-                <a href="mailto:daiane.elitepinturas@gmail.com" className="hover:text-white transition-colors">daiane.elitepinturas@gmail.com</a>
+                <a href="mailto:contato@danieledaianepinturas.com.br" className="hover:text-white transition-colors">contato@danieledaianepinturas.com.br</a>
               </li>
               <li className="flex items-start gap-3 leading-relaxed">
                 <MapPin size={18} className="text-brand-primary shrink-0" />
