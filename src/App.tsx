@@ -2,14 +2,16 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Stats } from './components/Stats';
 import { About } from './components/About';
+import { WhyUs } from './components/WhyUs';
 import { Services } from './components/Services';
+import { WorkProcess } from './components/WorkProcess';
 import { Testimonials } from './components/Testimonials';
 import { ServiceAreas } from './components/ServiceAreas';
 import { Banner } from './components/Banner';
 import { Portfolio } from './components/Portfolio';
 import { Documentary } from './components/Documentary';
-import { FAQ } from './components/FAQ';
 import { WhyTrustUs } from './components/WhyTrustUs';
+import { FAQ } from './components/FAQ';
 import { CTA } from './components/CTA';
 import { Footer } from './components/Footer';
 
@@ -21,14 +23,16 @@ export default function App() {
         <Hero />
         <Stats />
         <About />
+        <WhyUs />
         <Services />
+        <WorkProcess />
         <Testimonials />
         <ServiceAreas />
         <Banner />
         <Portfolio />
         <Documentary />
-        {/* <FAQ /> */}
         <WhyTrustUs />
+        <FAQ />
         <CTA />
       </main>
       <Footer />

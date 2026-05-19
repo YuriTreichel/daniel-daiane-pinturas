@@ -21,7 +21,7 @@ export const Banner = () => {
       <img src="/assets/images/interna.jpeg" className="absolute top-10 left-10 w-24 h-24 rounded-full object-cover hidden md:block hover:scale-110 transition-transform duration-500 shadow-xl border-4 border-white" />
       <img src="/assets/images/interna_2.jpeg" className="absolute bottom-10 left-32 w-20 h-20 rounded-full object-cover hidden md:block hover:scale-110 transition-transform duration-500 shadow-xl border-4 border-white" />
       <img src="/assets/images/externa.jpeg" className="absolute top-20 right-20 w-16 h-16 rounded-full object-cover hidden md:block hover:scale-110 transition-transform duration-500 shadow-xl border-4 border-white" />
-      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=200&auto=format&fit=crop" className="absolute bottom-12 right-32 w-32 h-32 rounded-full object-cover hidden md:block hover:scale-110 transition-transform duration-500 shadow-xl border-4 border-white" />
+      <img src="/assets/images/predial.jpg" className="absolute bottom-12 right-32 w-32 h-32 rounded-full object-cover hidden md:block hover:scale-110 transition-transform duration-500 shadow-xl border-4 border-white" />
     </section>
   );
 };

@@ -21,8 +21,8 @@ export const WhyTrustUs = () => {
           className="flex-1 grid grid-cols-2 gap-4"
         >
           <img src="/assets/images/interna.jpeg" className="w-full h-48 object-cover rounded-3xl shadow-md" />
-          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop" className="w-full h-48 object-cover rounded-3xl shadow-md" />
-          <img src="/assets/images/matt-pictures-jsotO6-hBsM-unsplash.jpg" className="w-full h-48 object-cover rounded-3xl shadow-md" />
+          <img src="/assets/images/predial.jpg" className="w-full h-48 object-cover rounded-3xl shadow-md" />
+          <img src="/assets/images/restauracao.png" className="w-full h-48 object-cover rounded-3xl shadow-md" />
           <img src="/assets/images/interna_2.jpeg" className="w-full h-48 object-cover rounded-3xl shadow-md" />
         </motion.div>
 

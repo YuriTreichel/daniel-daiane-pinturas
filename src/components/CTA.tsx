@@ -20,7 +20,7 @@ export const CTA = () => {
       {/* Decorative Circular Images */}
       <img src="/assets/images/interna.jpeg" className="absolute top-16 left-24 w-16 h-16 rounded-full object-cover hidden md:block border-2 border-white shadow-xl hover:scale-110 transition-transform duration-500" />
       <img src="/assets/images/interna_2.jpeg" className="absolute bottom-16 left-32 w-24 h-24 rounded-full object-cover hidden md:block border-4 border-white shadow-xl hover:scale-110 transition-transform duration-500" />
-      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=200&auto=format&fit=crop" className="absolute top-10 right-24 w-28 h-28 rounded-full object-cover hidden md:block border-4 border-white shadow-xl hover:scale-110 transition-transform duration-500" />
+      <img src="/assets/images/predial.jpg" className="absolute top-10 right-24 w-28 h-28 rounded-full object-cover hidden md:block border-4 border-white shadow-xl hover:scale-110 transition-transform duration-500" />
       <img src="/assets/images/externa.jpeg" className="absolute bottom-10 right-32 w-20 h-20 rounded-full object-cover hidden md:block border-2 border-white shadow-xl hover:scale-110 transition-transform duration-500" />
     </section>
   );

@@ -75,7 +75,7 @@ export const Services = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative rounded-3xl overflow-hidden group shadow-lg h-80 md:h-auto"
           >
-            <img src="/assets/images/matt-pictures-jsotO6-hBsM-unsplash.jpg" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <img src="/assets/images/restauracao.png" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
             <div className="absolute bottom-8 left-8 right-8">
               <h3 className="text-white font-bold text-2xl mb-2 leading-tight text-balance">Restauração de Pinturas</h3>
@@ -93,7 +93,7 @@ export const Services = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="relative rounded-3xl overflow-hidden group shadow-lg h-80 md:h-auto"
           >
-            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <img src="/assets/images/predial.jpg" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
             <div className="absolute bottom-8 left-8 right-8">
               <h3 className="text-white font-bold text-2xl mb-2 leading-tight">Pintura Predial</h3>

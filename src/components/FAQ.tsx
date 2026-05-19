@@ -53,7 +53,12 @@ export const FAQ = () => {
           ))}
         </div>
 
-        <a href="tel:54999802228" className="bg-brand-secondary text-white px-8 py-3 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-brand-primary transition-all shadow-md">
+        <a 
+          href="https://api.whatsapp.com/send/?phone=5554999802228&text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida%20sobre%20os%20serviços." 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="bg-brand-secondary text-white px-8 py-3 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-brand-primary transition-all shadow-md"
+        >
           Tire sua dúvida agora <ArrowUpRight size={16} />
         </a>
       </div>

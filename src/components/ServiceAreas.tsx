@@ -69,10 +69,10 @@ export const ServiceAreas = () => {
             <img src="/assets/images/interna.jpeg" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
           </div>
           <div className="rounded-3xl overflow-hidden shadow-lg h-48 mt-8">
-            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+            <img src="/assets/images/predial.jpg" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
           </div>
           <div className="rounded-3xl overflow-hidden shadow-lg h-48 -mt-8">
-            <img src="/assets/images/matt-pictures-jsotO6-hBsM-unsplash.jpg" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+            <img src="/assets/images/restauracao.png" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
           </div>
           <div className="rounded-3xl overflow-hidden shadow-lg h-48">
             <img src="/assets/images/interna_2.jpeg" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />

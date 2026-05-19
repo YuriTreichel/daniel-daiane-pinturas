@@ -1,11 +1,6 @@
 import { motion } from 'motion/react';
 import { Shield, Clock, ThumbsUp, Sparkles } from 'lucide-react';
 
-const COLORS = {
-  navy: '#0B1528',
-  orange: '#E84E36',
-};
-
 const reasons = [
   {
     icon: <Shield size={32} />,
@@ -31,15 +26,15 @@ const reasons = [
 
 export const WhyUs = () => {
   return (
-    <section className="py-24 bg-[#0B1528] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-brand-secondary text-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-sm font-bold tracking-widest uppercase mb-3" style={{ color: COLORS.orange }}>Por Que Nos Escolher</h2>
-            <h3 className="text-4xl font-bold mb-6 leading-tight">
+            <h2 className="text-sm font-bold tracking-widest uppercase mb-3 text-brand-primary">Por Que Nos Escolher</h2>
+            <h3 className="text-4xl font-bold mb-6 leading-tight text-white">
               Diferenciais que Fazem a Diferença no Seu Projeto
             </h3>
-            <p className="text-gray-400 text-lg mb-10 leading-relaxed">
+            <p className="text-white/70 text-lg mb-10 leading-relaxed">
               Não somos apenas pintores, somos especialistas em transformar ambientes com cuidado, técnica e dedicação. Nosso compromisso é com a sua total satisfação.
             </p>
             
@@ -52,11 +47,11 @@ export const WhyUs = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className="mb-4" style={{ color: COLORS.orange }}>
+                  <div className="mb-4 text-brand-primary">
                     {reason.icon}
                   </div>
-                  <h4 className="text-xl font-bold mb-2">{reason.title}</h4>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <h4 className="text-xl font-bold mb-2 text-white">{reason.title}</h4>
+                  <p className="text-white/70 text-sm leading-relaxed">
                     {reason.description}
                   </p>
                 </motion.div>
@@ -64,19 +59,17 @@ export const WhyUs = () => {
             </div>
           </div>
           
-          <div className="relative">
-            <div className="aspect-square rounded-full overflow-hidden border-8 border-white/10 relative z-10">
+          <div className="relative flex justify-center">
+            <div className="aspect-square rounded-full overflow-hidden border-8 border-white/10 relative z-10 max-w-md w-full">
               <img 
-                src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=2070&auto=format&fit=crop" 
-                alt="Pintor detalhista" 
+                src="/assets/images/obra.jpg" 
+                alt="Obra Daniel e Daiane Pinturas" 
                 className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
               />
             </div>
             {/* Decorative element */}
             <div 
-              className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full z-0 opacity-50"
-              style={{ backgroundColor: COLORS.orange, filter: 'blur(50px)' }}
+              className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full z-0 opacity-50 bg-brand-primary filter blur-[50px]"
             ></div>
           </div>
         </div>
