@@ -21,6 +21,10 @@ export const Documentary = () => {
     {
       id: 4,
       url: "/assets/videos/doc3.1.mp4",
+    },
+    {
+      id: 5,
+      url: "/assets/videos/doc4.mp4",
     }
   ];
 

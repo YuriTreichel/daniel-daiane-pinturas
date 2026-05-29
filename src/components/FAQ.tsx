@@ -4,7 +4,7 @@ import { useState } from 'react';
 const faqs = [
   {
     question: 'Qual é a disponibilidade de vocês e quando podem começar?',
-    answer: 'Nossa disponibilidade varia de acordo com os projetos em andamento, mas geralmente conseguimos iniciar novos trabalhos dentro de 1 a 2 semanas após o agendamento. Entre em contato para verificar nossa disponibilidade atual!'
+    answer: 'Depende de como está a agenda quando o orçamento for aprovado.'
   },
   {
     question: 'Que tipos de equipamentos vocês utilizam?',
@@ -17,10 +17,6 @@ const faqs = [
   {
     question: 'Vocês realizam orçamentos gratuitos?',
     answer: 'Sim! Realizamos visitas técnicas e orçamentos detalhados sem compromisso em Bento Gonçalves e região.'
-  },
-  {
-    question: 'Quais métodos de pagamento vocês aceitam?',
-    answer: 'Aceitamos Pix, transferências bancárias e cartões de crédito, com opções de parcelamento para facilitar o seu projeto.'
   }
 ];
 
