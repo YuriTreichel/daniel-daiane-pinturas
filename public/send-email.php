@@ -366,7 +366,7 @@ $html = "
 ";
 
 $to = "contato@danieledaianepinturas.com.br";
-$subject = "Trabalhe Conosco - Currículo de " . $nome;
+$subject = "=?UTF-8?B?" . base64_encode("Trabalhe Conosco - Currículo de " . $nome) . "?=";
 
 // Load file attachment details
 $attachments = [];
