@@ -17,7 +17,7 @@ export default defineConfig(({mode}) => {
         configureServer(server) {
           const upload = multer({ limits: { fileSize: 100 * 1024 * 1024 } }); // 100MB
           
-          server.middlewares.use('/api/send-email', (req, res) => {
+          server.middlewares.use('/send-email.php', (req, res) => {
             if (req.method !== 'POST') {
               res.statusCode = 405;
               res.end('Method Not Allowed');

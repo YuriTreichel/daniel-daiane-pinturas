@@ -405,7 +405,7 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
         data.append('videoApresentacao', formData.videoApresentacao);
       }
 
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('/send-email.php', {
         method: 'POST',
         body: data,
       });
