@@ -3,6 +3,18 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
+// =========================================================================
+// CONFIGURAÇÕES DE E-MAIL (SMTP)
+// =========================================================================
+// Se sua hospedagem bloquear a função mail() padrão (comum no Laragon e Hostinger),
+// preencha as configurações de SMTP da Daniel & Daiane Pinturas abaixo:
+define('SMTP_HOST', ''); // Ex: mail.danieledaianepinturas.com.br
+define('SMTP_PORT', 587); // Geralmente 587 ou 465
+define('SMTP_USER', 'contato@danieledaianepinturas.com.br');
+define('SMTP_PASS', '');  // Senha do e-mail acima
+define('SMTP_SECURE', 'tls'); // 'tls', 'ssl' ou '' (vazio)
+// =========================================================================
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(["error" => "Método não permitido"]);
@@ -356,47 +368,140 @@ $html = "
 $to = "contato@danieledaianepinturas.com.br";
 $subject = "Trabalhe Conosco - Currículo de " . $nome;
 
-// boundary 
-$semi_rand = md5(time()); 
-$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
-
-// headers for attachment 
-$headers = "MIME-Version: 1.0\n" . 
-           "From: " . $to . "\n" . 
-           "Reply-To: " . $email . "\n" . 
-           "Content-Type: multipart/mixed;\n" . 
-           " boundary=\"{$mime_boundary}\""; 
-
-// multipart boundary 
-$message = "--{$mime_boundary}\n" . 
-           "Content-Type: text/html; charset=\"UTF-8\"\n" . 
-           "Content-Transfer-Encoding: 7bit\n\n" . 
-           $html . "\n\n"; 
-
-// attachment
+// Load file attachment details
+$attachments = [];
 if (isset($_FILES['videoApresentacao']) && $_FILES['videoApresentacao']['error'] == UPLOAD_ERR_OK) {
-    $file_name = $_FILES['videoApresentacao']['name'];
-    $file_temp = $_FILES['videoApresentacao']['tmp_name'];
-    $file_size = $_FILES['videoApresentacao']['size'];
-    
-    $handle = fopen($file_temp, "r");
-    $content = fread($handle, $file_size);
-    fclose($handle);
-    $encoded_content = chunk_split(base64_encode($content));
-
-    $message .= "--{$mime_boundary}\n";
-    $message .= "Content-Type: application/octet-stream; name=\"".$file_name."\"\n";
-    $message .= "Content-Description: ".$file_name."\n";
-    $message .= "Content-Disposition: attachment;\n" . " filename=\"".$file_name."\"; size=".$file_size.";\n";
-    $message .= "Content-Transfer-Encoding: base64\n\n" . $encoded_content . "\n\n";
+    $attachments[] = [
+        'name' => $_FILES['videoApresentacao']['name'],
+        'type' => $_FILES['videoApresentacao']['type'],
+        'content' => file_get_contents($_FILES['videoApresentacao']['tmp_name'])
+    ];
 }
 
-$message .= "--{$mime_boundary}--";
+// Check SMTP configuration. If SMTP_HOST is set, send via SMTP socket. Otherwise fallback to mail()
+if (!empty(SMTP_HOST)) {
+    try {
+        $host = SMTP_HOST;
+        $port = SMTP_PORT;
+        $user = SMTP_USER;
+        $pass = SMTP_PASS;
+        $secure = SMTP_SECURE;
 
-if (@mail($to, $subject, $message, $headers)) {
-    echo json_encode(["success" => true]);
+        $socket = fsockopen(($secure === 'ssl' ? 'ssl://' : '') . $host, $port, $errno, $errstr, 15);
+        if (!$socket) {
+            throw new Exception("Erro ao conectar ao SMTP: $errstr ($errno)");
+        }
+
+        $read = function() use ($socket) {
+            $data = '';
+            while (strpos($data, "\r\n") === false || $data[3] === '-') {
+                $line = fgets($socket, 515);
+                if ($line === false) break;
+                $data .= $line;
+            }
+            return $data;
+        };
+
+        $send = function($cmd) use ($socket, $read) {
+            fputs($socket, $cmd . "\r\n");
+            return $read();
+        };
+
+        $read(); // Read greeting
+        $send("EHLO " . ($_SERVER['SERVER_NAME'] ?: 'localhost'));
+
+        if ($secure === 'tls') {
+            $send("STARTTLS");
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new Exception("Falha ao iniciar TLS");
+            }
+            $send("EHLO " . ($_SERVER['SERVER_NAME'] ?: 'localhost'));
+        }
+
+        if ($user && $pass) {
+            $send("AUTH LOGIN");
+            $send(base64_encode($user));
+            $send(base64_encode($pass));
+        }
+
+        $send("MAIL FROM:<$user>");
+        $send("RCPT TO:<$to>");
+        $send("DATA");
+
+        // Construct headers and body
+        $boundary = "==Multipart_Boundary_x" . md5(time()) . "x";
+        
+        $headers_dict = [
+            "To" => $to,
+            "From" => $user,
+            "Reply-To" => $email,
+            "Subject" => $subject
+        ];
+
+        $headers = [];
+        foreach ($headers_dict as $k => $v) {
+            $headers[] = "$k: $v";
+        }
+        $headers[] = "MIME-Version: 1.0";
+        $headers[] = "Content-Type: multipart/mixed; boundary=\"$boundary\"";
+
+        $email_content = implode("\r\n", $headers) . "\r\n\r\n";
+        $email_content .= "--$boundary\r\n";
+        $email_content .= "Content-Type: text/html; charset=\"UTF-8\"\r\n";
+        $email_content .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        $email_content .= $html . "\r\n\r\n";
+
+        foreach ($attachments as $att) {
+            $email_content .= "--$boundary\r\n";
+            $email_content .= "Content-Type: " . $att['type'] . "; name=\"" . $att['name'] . "\"\r\n";
+            $email_content .= "Content-Disposition: attachment; filename=\"" . $att['name'] . "\"\r\n";
+            $email_content .= "Content-Transfer-Encoding: base64\r\n\r\n";
+            $email_content .= chunk_split(base64_encode($att['content'])) . "\r\n\r\n";
+        }
+        $email_content .= "--$boundary--";
+        $email_content = preg_replace('/^\./m', '..', $email_content);
+        
+        $send($email_content . "\r\n.");
+        $send("QUIT");
+        fclose($socket);
+
+        echo json_encode(["success" => true]);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Falha no SMTP: " . $e->getMessage()]);
+    }
 } else {
-    http_response_code(500);
-    echo json_encode(["error" => "Falha ao enviar e-mail. Verifique a configuração de e-mail do seu servidor."]);
+    // Fallback to local mail() function
+    $semi_rand = md5(time()); 
+    $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
+
+    $headers = "MIME-Version: 1.0\n" . 
+               "From: " . $to . "\n" . 
+               "Reply-To: " . $email . "\n" . 
+               "Content-Type: multipart/mixed;\n" . 
+               " boundary=\"{$mime_boundary}\""; 
+
+    $message = "--{$mime_boundary}\n" . 
+               "Content-Type: text/html; charset=\"UTF-8\"\n" . 
+               "Content-Transfer-Encoding: 7bit\n\n" . 
+               $html . "\n\n"; 
+
+    foreach ($attachments as $att) {
+        $encoded_content = chunk_split(base64_encode($att['content']));
+        $message .= "--{$mime_boundary}\n";
+        $message .= "Content-Type: application/octet-stream; name=\"".$att['name']."\"\n";
+        $message .= "Content-Description: ".$att['name']."\n";
+        $message .= "Content-Disposition: attachment;\n" . " filename=\"".$att['name']."\"; size=".strlen($att['content']).";\n";
+        $message .= "Content-Transfer-Encoding: base64\n\n" . $encoded_content . "\n\n";
+    }
+
+    $message .= "--{$mime_boundary}--";
+
+    if (@mail($to, $subject, $message, $headers)) {
+        echo json_encode(["success" => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode(["error" => "Falha ao enviar e-mail. Verifique a configuração de e-mail do seu servidor local ou preencha as configurações de SMTP no topo de send-email.php."]);
+    }
 }
 ?>
