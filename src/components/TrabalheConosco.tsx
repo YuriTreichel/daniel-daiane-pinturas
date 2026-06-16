@@ -348,7 +348,6 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
       if (formData.possuiIndicacao === 'Sim' && !formData.indicacaoQuem.trim()) {
         newErrors.indicacaoQuem = 'Informe o nome de quem o indicou.';
       }
-      if (!formData.videoApresentacao) newErrors.videoApresentacao = 'O envio do vídeo de apresentação é obrigatório.';
       if (!formData.situacaoDificilObra.trim()) newErrors.situacaoDificilObra = 'Este campo é obrigatório.';
     }
 
@@ -1476,7 +1475,7 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
                             <Video size={28} />
                           </div>
                           <h4 className="font-bold text-brand-secondary mb-2">
-                            Grave um vídeo de até 1 minuto se apresentando
+                            Grave um vídeo de até 1 minuto se apresentando (Opcional)
                           </h4>
                           <p className="text-xs text-gray-500 max-w-sm mx-auto mb-4">
                             Conte sua experiência na construção civil e por que deseja trabalhar conosco. Envie nos formatos .mp4, .mov ou similar.

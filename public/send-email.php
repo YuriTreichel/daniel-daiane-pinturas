@@ -8,11 +8,11 @@ header("Content-Type: application/json; charset=UTF-8");
 // =========================================================================
 // Se sua hospedagem bloquear a função mail() padrão (comum no Laragon e Hostinger),
 // preencha as configurações de SMTP da Daniel & Daiane Pinturas abaixo:
-define('SMTP_HOST', ''); // Ex: mail.danieledaianepinturas.com.br
-define('SMTP_PORT', 587); // Geralmente 587 ou 465
+define('SMTP_HOST', 'mail.danieledaianepinturas.com.br'); // Ex: mail.danieledaianepinturas.com.br
+define('SMTP_PORT', 465); // Geralmente 587 ou 465
 define('SMTP_USER', 'contato@danieledaianepinturas.com.br');
-define('SMTP_PASS', '');  // Senha do e-mail acima
-define('SMTP_SECURE', 'tls'); // 'tls', 'ssl' ou '' (vazio)
+define('SMTP_PASS', '@DanielDaiane1020');  // Senha do e-mail acima
+define('SMTP_SECURE', 'ssl'); // 'tls', 'ssl' ou '' (vazio)
 // =========================================================================
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
