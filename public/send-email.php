@@ -31,6 +31,7 @@ $email = $_POST['email'] ?? 'Não informado';
 $cidade = $_POST['cidade'] ?? 'Não informado';
 $bairro = $_POST['bairro'] ?? 'Não informado';
 $socialMedia = $_POST['socialMedia'] ?? 'Não informado';
+$escolaridade = $_POST['escolaridade'] ?? 'Não informado';
 
 $possuiCnh = $_POST['possuiCnh'] ?? 'Não informado';
 $cnhCategoriaRaw = $_POST['cnhCategoria'] ?? '[]';
@@ -56,6 +57,18 @@ $motivoSaida = $_POST['motivoSaida'] ?? 'Não informado';
 $servicosExecutarRaw = $_POST['servicosExecutar'] ?? '[]';
 $servicosExecutar = json_decode($servicosExecutarRaw, true) ?: [];
 
+$experienciaRevestimentoFachadaRaw = $_POST['experienciaRevestimentoFachada'] ?? '[]';
+$experienciaRevestimentoFachada = implode(', ', json_decode($experienciaRevestimentoFachadaRaw, true) ?: []);
+
+$inspecaoDiagnosticoRaw = $_POST['inspecaoDiagnostico'] ?? '[]';
+$inspecaoDiagnostico = implode(', ', json_decode($inspecaoDiagnosticoRaw, true) ?: []);
+
+$recuperacaoFachadaEspecialidadesRaw = $_POST['recuperacaoFachadaEspecialidades'] ?? '[]';
+$recuperacaoFachadaEspecialidades = implode(', ', json_decode($recuperacaoFachadaEspecialidadesRaw, true) ?: []);
+
+$experienciaPraticaFachadaRaw = $_POST['experienciaPraticaFachada'] ?? '[]';
+$experienciaPraticaFachada = implode(', ', json_decode($experienciaPraticaFachadaRaw, true) ?: []);
+
 $experienciaAltura = $_POST['experienciaAltura'] ?? 'Não informado';
 $certificadoNr35 = $_POST['certificadoNr35'] ?? 'Não informado';
 $experienciaEquipamentosRaw = $_POST['experienciaEquipamentos'] ?? '[]';
@@ -63,6 +76,10 @@ $experienciaEquipamentos = implode(', ', json_decode($experienciaEquipamentosRaw
 $acidenteAltura = $_POST['acidenteAltura'] ?? 'Não informado';
 $acidenteAlturaExplique = $_POST['acidenteAlturaExplique'] ?? 'Não informado';
 $nivelSegurancaAltura = $_POST['nivelSegurancaAltura'] ?? '5';
+
+$alturaRevestimentoEquipamentosRaw = $_POST['alturaRevestimentoEquipamentos'] ?? '[]';
+$alturaRevestimentoEquipamentos = implode(', ', json_decode($alturaRevestimentoEquipamentosRaw, true) ?: []);
+$obraRiscoDesprendimentoExplique = $_POST['obraRiscoDesprendimentoExplique'] ?? 'Não informado';
 
 $importanteEmpresa = $_POST['importanteEmpresa'] ?? 'Não informado';
 $motivoDemissao = $_POST['motivoDemissao'] ?? 'Não informado';
@@ -170,6 +187,12 @@ $html = "
               <div class=\"field-value\">" . htmlspecialchars($socialMedia) . "</div>
             </td>
           </tr>
+          <tr>
+            <td width=\"100%\" colspan=\"2\" valign=\"top\">
+              <div class=\"field-label\">Escolaridade</div>
+              <div class=\"field-value\">" . htmlspecialchars($escolaridade) . "</div>
+            </td>
+          </tr>
         </table>
       </div>
 
@@ -261,16 +284,38 @@ $html = "
 
       <!-- ETAPA 4 -->
       <div class=\"section-card\">
-        <h3 class=\"section-title\">🔧 Etapa 4 – Serviços que Sabe Executar</h3>
-        <ul class=\"list-items\">
-          " . $servicesHtml . "
-        </ul>
+        <h3 class=\"section-title\">🔧 Etapa 4 – Experiência Técnica e Especialidades</h3>
+        
+        <div style=\"margin-bottom: 12px;\">
+          <div class=\"field-label\">Serviços Gerais de Pintura que Sabe Executar</div>
+          <div class=\"field-value\">" . (!empty($servicesHtml) ? $servicesHtml : 'Nenhum') . "</div>
+        </div>
+
+        <div style=\"margin-bottom: 12px;\">
+          <div class=\"field-label\">Experiência em Revestimentos de Fachada</div>
+          <div class=\"field-value\">" . htmlspecialchars(!empty($experienciaRevestimentoFachada) ? $experienciaRevestimentoFachada : 'Nenhuma') . "</div>
+        </div>
+
+        <div style=\"margin-bottom: 12px;\">
+          <div class=\"field-label\">Inspeção e Diagnóstico</div>
+          <div class=\"field-value\">" . htmlspecialchars(!empty($inspecaoDiagnostico) ? $inspecaoDiagnostico : 'Nenhuma') . "</div>
+        </div>
+
+        <div style=\"margin-bottom: 12px;\">
+          <div class=\"field-label\">Recuperação de Fachadas (Especialidades)</div>
+          <div class=\"field-value\">" . htmlspecialchars(!empty($recuperacaoFachadaEspecialidades) ? $recuperacaoFachadaEspecialidades : 'Nenhuma') . "</div>
+        </div>
+
+        <div style=\"margin-bottom: 0;\">
+          <div class=\"field-label\">Experiência Prática (Atuação em Fachadas)</div>
+          <div class=\"field-value\">" . htmlspecialchars(!empty($experienciaPraticaFachada) ? $experienciaPraticaFachada : 'Nenhuma') . "</div>
+        </div>
       </div>
 
       <!-- ETAPA 5 -->
       <div class=\"section-card\">
         <h3 class=\"section-title\">🪜 Etapa 5 – Trabalho em Altura</h3>
-        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
+        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom: 12px;\">
           <tr>
             <td width=\"50%\" valign=\"top\">
               <div class=\"field-label\">Tem experiência com Altura?</div>
@@ -283,8 +328,14 @@ $html = "
           </tr>
           <tr>
             <td width=\"100%\" colspan=\"2\" valign=\"top\">
-              <div class=\"field-label\">Equipamentos com Experiência</div>
+              <div class=\"field-label\">Equipamentos Gerais com Experiência</div>
               <div class=\"field-value\">" . htmlspecialchars($experienciaEquipamentos) . "</div>
+            </td>
+          </tr>
+          <tr>
+            <td width=\"100%\" colspan=\"2\" valign=\"top\">
+              <div class=\"field-label\">Equipamentos de Altura para Revestimento Utilizados</div>
+              <div class=\"field-value\">" . htmlspecialchars($alturaRevestimentoEquipamentos) . "</div>
             </td>
           </tr>
           <tr>
@@ -298,6 +349,10 @@ $html = "
             </td>
           </tr>
         </table>
+        <div style=\"margin-bottom: 0;\">
+          <div class=\"field-label\">Participação e relato de obra com risco de desprendimento de revestimento</div>
+          <div style=\"background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0;\">" . htmlspecialchars($obraRiscoDesprendimentoExplique) . "</div>
+        </div>
       </div>
 
       <!-- ETAPA 6 -->

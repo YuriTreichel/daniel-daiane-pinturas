@@ -48,12 +48,22 @@ export default defineConfig(({mode}) => {
                 const cnhCategoria = parseField(body.cnhCategoria);
                 const servicosExecutar = parseField(body.servicosExecutar);
                 const experienciaEquipamentos = parseField(body.experienciaEquipamentos);
+                const experienciaRevestimentoFachada = parseField(body.experienciaRevestimentoFachada);
+                const inspecaoDiagnostico = parseField(body.inspecaoDiagnostico);
+                const recuperacaoFachadaEspecialidades = parseField(body.recuperacaoFachadaEspecialidades);
+                const alturaRevestimentoEquipamentos = parseField(body.alturaRevestimentoEquipamentos);
+                const experienciaPraticaFachada = parseField(body.experienciaPraticaFachada);
 
                 const candidateData = {
                   ...body,
                   cnhCategoria,
                   servicosExecutar,
-                  experienciaEquipamentos
+                  experienciaEquipamentos,
+                  experienciaRevestimentoFachada,
+                  inspecaoDiagnostico,
+                  recuperacaoFachadaEspecialidades,
+                  alturaRevestimentoEquipamentos,
+                  experienciaPraticaFachada
                 };
 
                 const html = generateCandidateEmailHTML(candidateData);

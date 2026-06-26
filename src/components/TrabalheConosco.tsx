@@ -31,6 +31,7 @@ interface FormData {
   bairro: string;
   email: string;
   socialMedia: string;
+  escolaridade: string;
 
   // Etapa 2: Informações Pessoais
   possuiCnh: string; // 'Sim' | 'Não'
@@ -55,6 +56,10 @@ interface FormData {
 
   // Etapa 4: Experiência Técnica
   servicosExecutar: string[]; // list of services
+  experienciaRevestimentoFachada: string[];
+  inspecaoDiagnostico: string[];
+  recuperacaoFachadaEspecialidades: string[];
+  experienciaPraticaFachada: string[];
 
   // Etapa 5: Trabalho em Altura
   experienciaAltura: string; // 'Sim' | 'Não'
@@ -63,6 +68,8 @@ interface FormData {
   acidenteAltura: string; // 'Sim' | 'Não'
   acidenteAlturaExplique: string;
   nivelSegurancaAltura: number; // 1-10
+  alturaRevestimentoEquipamentos: string[];
+  obraRiscoDesprendimentoExplique: string;
 
   // Etapa 6: Perfil Comportamental
   importanteEmpresa: string;
@@ -91,6 +98,7 @@ const initialFormData: FormData = {
   bairro: '',
   email: '',
   socialMedia: '',
+  escolaridade: '',
   possuiCnh: '',
   cnhCategoria: [],
   veiculoProprio: '',
@@ -109,12 +117,18 @@ const initialFormData: FormData = {
   estaEmpregado: '',
   pretensaoSalarial: '',
   servicosExecutar: [],
+  experienciaRevestimentoFachada: [],
+  inspecaoDiagnostico: [],
+  recuperacaoFachadaEspecialidades: [],
+  experienciaPraticaFachada: [],
   experienciaAltura: '',
   experienciaEquipamentos: [],
   certificadoNr35: '',
   acidenteAltura: '',
   acidenteAlturaExplique: '',
   nivelSegurancaAltura: 5,
+  alturaRevestimentoEquipamentos: [],
+  obraRiscoDesprendimentoExplique: '',
   importanteEmpresa: '',
   motivoDemissao: '',
   preferenciaTrabalho: '',
@@ -205,17 +219,45 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
     }
   };
 
-  const handleCheckboxChange = (name: 'servicosExecutar' | 'experienciaEquipamentos' | 'cnhCategoria', item: string) => {
+  const handleCheckboxChange = (
+    name: 'servicosExecutar' | 'experienciaEquipamentos' | 'cnhCategoria' | 'experienciaRevestimentoFachada' | 'inspecaoDiagnostico' | 'recuperacaoFachadaEspecialidades' | 'alturaRevestimentoEquipamentos' | 'experienciaPraticaFachada', 
+    item: string
+  ) => {
     setFormData(prev => {
       const currentList = prev[name] as string[];
-      const newList = currentList.includes(item)
-        ? currentList.filter(i => i !== item)
-        : [...currentList, item];
+      let newList: string[];
+
+      const isExclusiveOption = 
+        item === 'Não possuo experiência' || 
+        item === 'Nenhum' || 
+        item === 'Nenhum dos itens acima';
+
+      if (isExclusiveOption) {
+        newList = currentList.includes(item) ? [] : [item];
+      } else {
+        newList = currentList.filter(i => 
+          i !== 'Não possuo experiência' && 
+          i !== 'Nenhum' && 
+          i !== 'Nenhum dos itens acima'
+        );
+        newList = newList.includes(item)
+          ? newList.filter(i => i !== item)
+          : [...newList, item];
+      }
+
       return {
         ...prev,
         [name]: newList
       };
     });
+
+    // Clear error for this field
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -286,6 +328,9 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         newErrors.email = 'E-mail inválido.';
       }
+      if (!formData.escolaridade.trim()) {
+        newErrors.escolaridade = 'Escolaridade é obrigatória.';
+      }
     }
 
     if (step === 2) {
@@ -318,6 +363,18 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
       if (formData.servicosExecutar.length === 0) {
         newErrors.servicosExecutar = 'Selecione pelo menos um serviço que sabe executar.';
       }
+      if (formData.experienciaRevestimentoFachada.length === 0) {
+        newErrors.experienciaRevestimentoFachada = 'Selecione pelo menos uma opção de experiência em revestimentos.';
+      }
+      if (formData.inspecaoDiagnostico.length === 0) {
+        newErrors.inspecaoDiagnostico = 'Selecione pelo menos uma opção de inspeção e diagnóstico.';
+      }
+      if (formData.recuperacaoFachadaEspecialidades.length === 0) {
+        newErrors.recuperacaoFachadaEspecialidades = 'Selecione pelo menos uma opção de recuperação de fachadas.';
+      }
+      if (formData.experienciaPraticaFachada.length === 0) {
+        newErrors.experienciaPraticaFachada = 'Selecione pelo menos uma opção de experiência prática.';
+      }
     }
 
     if (step === 5) {
@@ -329,6 +386,12 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
       if (!formData.acidenteAltura) newErrors.acidenteAltura = 'Responda esta pergunta.';
       if (formData.acidenteAltura === 'Sim' && !formData.acidenteAlturaExplique.trim()) {
         newErrors.acidenteAlturaExplique = 'Por favor, explique o acidente.';
+      }
+      if (formData.experienciaAltura === 'Sim' && formData.alturaRevestimentoEquipamentos.length === 0) {
+        newErrors.alturaRevestimentoEquipamentos = 'Selecione pelo menos uma opção de trabalho em altura para revestimentos.';
+      }
+      if (!formData.obraRiscoDesprendimentoExplique.trim()) {
+        newErrors.obraRiscoDesprendimentoExplique = 'Descreva sua participação em obras com risco ou informe "Não participei".';
       }
     }
 
@@ -387,9 +450,22 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
     try {
       const data = new FormData();
       
+      // Array key helper list to filter out
+      const arrayKeys = [
+        'cnhCategoria', 
+        'servicosExecutar', 
+        'experienciaEquipamentos', 
+        'experienciaRevestimentoFachada',
+        'inspecaoDiagnostico',
+        'recuperacaoFachadaEspecialidades',
+        'alturaRevestimentoEquipamentos',
+        'experienciaPraticaFachada',
+        'videoApresentacao'
+      ];
+
       // Append standard text fields
       Object.entries(formData).forEach(([key, value]) => {
-        if (key !== 'cnhCategoria' && key !== 'servicosExecutar' && key !== 'experienciaEquipamentos' && key !== 'videoApresentacao') {
+        if (!arrayKeys.includes(key)) {
           data.append(key, String(value));
         }
       });
@@ -398,6 +474,11 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
       data.append('cnhCategoria', JSON.stringify(formData.cnhCategoria));
       data.append('servicosExecutar', JSON.stringify(formData.servicosExecutar));
       data.append('experienciaEquipamentos', JSON.stringify(formData.experienciaEquipamentos));
+      data.append('experienciaRevestimentoFachada', JSON.stringify(formData.experienciaRevestimentoFachada));
+      data.append('inspecaoDiagnostico', JSON.stringify(formData.inspecaoDiagnostico));
+      data.append('recuperacaoFachadaEspecialidades', JSON.stringify(formData.recuperacaoFachadaEspecialidades));
+      data.append('alturaRevestimentoEquipamentos', JSON.stringify(formData.alturaRevestimentoEquipamentos));
+      data.append('experienciaPraticaFachada', JSON.stringify(formData.experienciaPraticaFachada));
 
       // Append file
       if (formData.videoApresentacao) {
@@ -462,6 +543,62 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
     'Andaime fachadeiro',
     'Plataforma elevatória',
     'Escada extensiva'
+  ];
+
+  const experienciaRevestimentoList = [
+    'Pastilhas cerâmicas em fachada',
+    'Pastilhas de porcelana',
+    'Porcelanato em fachada',
+    'Revestimentos cerâmicos externos',
+    'Pedras naturais em fachada',
+    'ACM',
+    'Não possuo experiência'
+  ];
+
+  const inspecaoDiagnosticoList = [
+    'Teste de percussão (som cavo)',
+    'Mapeamento de áreas ocas',
+    'Inspeção visual de fachadas',
+    'Identificação de peças soltas',
+    'Identificação de infiltrações',
+    'Relatório fotográfico',
+    'Nenhum dos itens acima'
+  ];
+
+  const recuperacaoFachadaEspecialidadesList = [
+    'Remoção de pastilhas soltas',
+    'Remoção de porcelanatos soltos',
+    'Recomposição de reboco',
+    'Regularização de superfície',
+    'Assentamento de novas pastilhas',
+    'Rejuntamento',
+    'Limpeza pós-obra',
+    'Impermeabilização',
+    'Tratamento de fissuras',
+    'Tratamento de trincas',
+    'Recuperação de fachadas com infiltração'
+  ];
+
+  const alturaRevestimentoEquipamentosList = [
+    'Cadeira suspensa',
+    'Balancim',
+    'Andaime fachadeiro',
+    'Plataforma elevatória',
+    'Nenhum'
+  ];
+
+  const experienciaPraticaFachadaList = [
+    'Recuperação de fachada com pastilhas',
+    'Recuperação de fachada com porcelanato',
+    'Substituição de peças soltas',
+    'Troca de rejunte deteriorado',
+    'Lavagem de fachada',
+    'Hidrojateamento',
+    'Aplicação de hidrofugante',
+    'Recuperação de sacadas',
+    'Recuperação de marquises',
+    'Pintura sobre textura',
+    'Pintura sobre reboco'
   ];
 
   return (
@@ -730,6 +867,26 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
                             placeholder="Ex: Centro"
                           />
                           {errors.bairro && <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1"><AlertCircle size={12} /> {errors.bairro}</p>}
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-brand-secondary mb-2">Escolaridade</label>
+                          <select 
+                            name="escolaridade"
+                            value={formData.escolaridade}
+                            onChange={handleChange}
+                            className={`w-full px-4 py-3 rounded-xl border ${errors.escolaridade ? 'border-red-500 bg-red-50/10' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary bg-white transition-all`}
+                          >
+                            <option value="">Selecione sua escolaridade...</option>
+                            <option value="Ensino Fundamental Incompleto">Ensino Fundamental Incompleto</option>
+                            <option value="Ensino Fundamental Completo">Ensino Fundamental Completo</option>
+                            <option value="Ensino Médio Incompleto">Ensino Médio Incompleto</option>
+                            <option value="Ensino Médio Completo">Ensino Médio Completo</option>
+                            <option value="Ensino Superior Incompleto">Ensino Superior Incompleto</option>
+                            <option value="Ensino Superior Completo">Ensino Superior Completo</option>
+                            <option value="Pós-graduação / Especialização">Pós-graduação / Especialização</option>
+                          </select>
+                          {errors.escolaridade && <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1"><AlertCircle size={12} /> {errors.escolaridade}</p>}
                         </div>
                       </div>
 
@@ -1077,20 +1234,24 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
 
                   {/* STEP 4: EXPERIÊNCIA TÉCNICA */}
                   {step === 4 && (
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <div className="border-b border-gray-100 pb-4 mb-6">
                         <h3 className="text-xl font-bold text-brand-secondary flex items-center gap-2">
-                          <Wrench className="text-brand-primary" /> ETAPA 4 – EXPERIÊNCIA TÉCNICA
+                          <Wrench className="text-brand-primary" /> ETAPA 4 – EXPERIÊNCIA TÉCNICA E FACHADAS
                         </h3>
-                        <p className="text-sm text-gray-500">Marque todos os serviços que você sabe executar com segurança e qualidade</p>
+                        <p className="text-sm text-gray-500">Marque todas as opções que correspondem à sua experiência profissional com segurança e qualidade</p>
                       </div>
 
-                      <div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {/* 1. Serviços Gerais de Pintura */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-brand-secondary text-base border-l-4 border-brand-primary pl-2.5">
+                          Serviços Gerais de Pintura/Acabamento
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                           {servicesList.map((service, index) => (
                             <label 
                               key={index} 
-                              className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                              className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
                                 formData.servicosExecutar.includes(service)
                                   ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
                                   : 'border-gray-200'
@@ -1098,17 +1259,150 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
                             >
                               <input 
                                 type="checkbox"
+                                name="servicosExecutar"
                                 checked={formData.servicosExecutar.includes(service)}
                                 onChange={() => handleCheckboxChange('servicosExecutar', service)}
                                 className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
                               />
-                              <span className="text-sm font-medium">{service}</span>
+                              <span className="text-xs font-semibold text-gray-700">{service}</span>
                             </label>
                           ))}
                         </div>
                         {errors.servicosExecutar && (
-                          <p className="text-xs text-red-500 mt-4 flex items-center gap-1">
-                            <AlertCircle size={14} /> {errors.servicosExecutar}
+                          <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.servicosExecutar}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 2. Experiência em Revestimentos de Fachada */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-brand-secondary text-base border-l-4 border-brand-primary pl-2.5">
+                          Experiência em Revestimentos de Fachada
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {experienciaRevestimentoList.map((item, index) => (
+                            <label 
+                              key={index} 
+                              className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                                formData.experienciaRevestimentoFachada.includes(item)
+                                  ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
+                                  : 'border-gray-200'
+                              }`}
+                            >
+                              <input 
+                                type="checkbox"
+                                name="experienciaRevestimentoFachada"
+                                checked={formData.experienciaRevestimentoFachada.includes(item)}
+                                onChange={() => handleCheckboxChange('experienciaRevestimentoFachada', item)}
+                                className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
+                              />
+                              <span className="text-xs font-semibold text-gray-700">{item}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {errors.experienciaRevestimentoFachada && (
+                          <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.experienciaRevestimentoFachada}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 3. Inspeção e Diagnóstico */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-brand-secondary text-base border-l-4 border-brand-primary pl-2.5">
+                          Inspeção e Diagnóstico de Fachada
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {inspecaoDiagnosticoList.map((item, index) => (
+                            <label 
+                              key={index} 
+                              className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                                formData.inspecaoDiagnostico.includes(item)
+                                  ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
+                                  : 'border-gray-200'
+                              }`}
+                            >
+                              <input 
+                                type="checkbox"
+                                name="inspecaoDiagnostico"
+                                checked={formData.inspecaoDiagnostico.includes(item)}
+                                onChange={() => handleCheckboxChange('inspecaoDiagnostico', item)}
+                                className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
+                              />
+                              <span className="text-xs font-semibold text-gray-700">{item}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {errors.inspecaoDiagnostico && (
+                          <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.inspecaoDiagnostico}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 4. Recuperação de Fachadas */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-brand-secondary text-base border-l-4 border-brand-primary pl-2.5">
+                          Recuperação de Fachadas (Experiência Específica)
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {recuperacaoFachadaEspecialidadesList.map((item, index) => (
+                            <label 
+                              key={index} 
+                              className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                                formData.recuperacaoFachadaEspecialidades.includes(item)
+                                  ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
+                                  : 'border-gray-200'
+                              }`}
+                            >
+                              <input 
+                                type="checkbox"
+                                name="recuperacaoFachadaEspecialidades"
+                                checked={formData.recuperacaoFachadaEspecialidades.includes(item)}
+                                onChange={() => handleCheckboxChange('recuperacaoFachadaEspecialidades', item)}
+                                className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
+                              />
+                              <span className="text-xs font-semibold text-gray-700">{item}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {errors.recuperacaoFachadaEspecialidades && (
+                          <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.recuperacaoFachadaEspecialidades}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 5. Experiência Prática Fachadas */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-brand-secondary text-base border-l-4 border-brand-primary pl-2.5">
+                          Experiência Prática (Atuação em Fachadas)
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {experienciaPraticaFachadaList.map((item, index) => (
+                            <label 
+                              key={index} 
+                              className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                                formData.experienciaPraticaFachada.includes(item)
+                                  ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
+                                  : 'border-gray-200'
+                              }`}
+                            >
+                              <input 
+                                type="checkbox"
+                                name="experienciaPraticaFachada"
+                                checked={formData.experienciaPraticaFachada.includes(item)}
+                                onChange={() => handleCheckboxChange('experienciaPraticaFachada', item)}
+                                className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
+                              />
+                              <span className="text-xs font-semibold text-gray-700">{item}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {errors.experienciaPraticaFachada && (
+                          <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.experienciaPraticaFachada}
                           </p>
                         )}
                       </div>
@@ -1262,6 +1556,51 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
                             {errors.acidenteAlturaExplique && <p className="text-xs text-red-500 mt-1.5">{errors.acidenteAlturaExplique}</p>}
                           </motion.div>
                         )}
+
+                        {/* Trabalho em Altura para Revestimentos */}
+                        <div className="col-span-1 md:col-span-2">
+                          <label className="block text-sm font-semibold text-brand-secondary mb-3">
+                            Trabalho em Altura para Revestimentos (Já executou serviços utilizando):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            {alturaRevestimentoEquipamentosList.map((eq, index) => (
+                              <label 
+                                key={index}
+                                className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer hover:bg-gray-50 transition-all ${
+                                  formData.alturaRevestimentoEquipamentos.includes(eq)
+                                    ? 'bg-brand-primary/5 border-brand-primary/30 text-brand-secondary'
+                                    : 'border-gray-200'
+                                }`}
+                              >
+                                <input 
+                                  type="checkbox"
+                                  name="alturaRevestimentoEquipamentos"
+                                  checked={formData.alturaRevestimentoEquipamentos.includes(eq)}
+                                  onChange={() => handleCheckboxChange('alturaRevestimentoEquipamentos', eq)}
+                                  className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300"
+                                />
+                                <span className="text-sm font-medium">{eq}</span>
+                              </label>
+                            ))}
+                          </div>
+                          {errors.alturaRevestimentoEquipamentos && <p className="text-xs text-red-500 mt-2">{errors.alturaRevestimentoEquipamentos}</p>}
+                        </div>
+
+                        {/* Obra de recuperação de fachada com risco de desprendimento */}
+                        <div className="col-span-1 md:col-span-2">
+                          <label className="block text-sm font-semibold text-brand-secondary mb-2">
+                            Você já participou de alguma obra de recuperação de fachada com risco de desprendimento de revestimento? Explique qual era o problema e como a equipe resolveu.
+                          </label>
+                          <textarea 
+                            name="obraRiscoDesprendimentoExplique"
+                            value={formData.obraRiscoDesprendimentoExplique}
+                            onChange={handleChange}
+                            rows={3}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                            placeholder="Descreva o problema e a solução (ou informe 'Não participei de obras com esse risco')"
+                          />
+                          {errors.obraRiscoDesprendimentoExplique && <p className="text-xs text-red-500 mt-1.5">{errors.obraRiscoDesprendimentoExplique}</p>}
+                        </div>
                       </div>
                     </div>
                   )}

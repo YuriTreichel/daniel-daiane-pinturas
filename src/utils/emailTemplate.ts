@@ -172,13 +172,19 @@ export function generateCandidateEmailHTML(data: any): string {
                 </td>
               </tr>
               <tr>
-                <td width="50%" valign="top">
+                <td width="50%" valign="top" style="padding-bottom: 12px;">
                   <div class="field-label">Cidade / Bairro</div>
                   <div class="field-value">${getVal(data.cidade)} - ${getVal(data.bairro)}</div>
                 </td>
-                <td width="50%" valign="top">
+                <td width="50%" valign="top" style="padding-bottom: 12px;">
                   <div class="field-label">Redes Sociais</div>
                   <div class="field-value">${getVal(data.socialMedia)}</div>
+                </td>
+              </tr>
+              <tr>
+                <td width="100%" colspan="2" valign="top">
+                  <div class="field-label">Escolaridade</div>
+                  <div class="field-value">${getVal(data.escolaridade)}</div>
                 </td>
               </tr>
             </table>
@@ -272,19 +278,38 @@ export function generateCandidateEmailHTML(data: any): string {
 
           <!-- ETAPA 4 -->
           <div class="section-card">
-            <h3 class="section-title">🔧 Etapa 4 – Serviços que Sabe Executar</h3>
-            <ul class="list-items">
-              ${Array.isArray(data.servicosExecutar) && data.servicosExecutar.length > 0 
-                ? data.servicosExecutar.map((serv: string) => `<li>${serv}</li>`).join('') 
-                : '<li>Nenhum serviço selecionado</li>'
-              }
-            </ul>
+            <h3 class="section-title">🔧 Etapa 4 – Experiência Técnica e Especialidades</h3>
+            
+            <div style="margin-bottom: 12px;">
+              <div class="field-label">Serviços Gerais de Pintura que Sabe Executar</div>
+              <div class="field-value">${getArrayVal(data.servicosExecutar)}</div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div class="field-label">Experiência em Revestimentos de Fachada</div>
+              <div class="field-value">${getArrayVal(data.experienciaRevestimentoFachada)}</div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div class="field-label">Inspeção e Diagnóstico</div>
+              <div class="field-value">${getArrayVal(data.inspecaoDiagnostico)}</div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div class="field-label">Recuperação de Fachadas (Especialidades)</div>
+              <div class="field-value">${getArrayVal(data.recuperacaoFachadaEspecialidades)}</div>
+            </div>
+
+            <div style="margin-bottom: 0;">
+              <div class="field-label">Experiência Prática (Atuação em Fachadas)</div>
+              <div class="field-value">${getArrayVal(data.experienciaPraticaFachada)}</div>
+            </div>
           </div>
 
           <!-- ETAPA 5 -->
           <div class="section-card">
             <h3 class="section-title">🪜 Etapa 5 – Trabalho em Altura</h3>
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;">
               <tr>
                 <td width="50%" valign="top" style="padding-bottom: 12px;">
                   <div class="field-label">Tem experiência com Altura?</div>
@@ -297,8 +322,14 @@ export function generateCandidateEmailHTML(data: any): string {
               </tr>
               <tr>
                 <td width="100%" colspan="2" valign="top" style="padding-bottom: 12px;">
-                  <div class="field-label">Equipamentos com Experiência</div>
+                  <div class="field-label">Equipamentos Gerais com Experiência</div>
                   <div class="field-value">${getArrayVal(data.experienciaEquipamentos)}</div>
+                </td>
+              </tr>
+              <tr>
+                <td width="100%" colspan="2" valign="top" style="padding-bottom: 12px;">
+                  <div class="field-label">Equipamentos de Altura para Revestimento Utilizados</div>
+                  <div class="field-value">${getArrayVal(data.alturaRevestimentoEquipamentos)}</div>
                 </td>
               </tr>
               <tr>
@@ -312,6 +343,12 @@ export function generateCandidateEmailHTML(data: any): string {
                 </td>
               </tr>
             </table>
+            <div class="field-group" style="margin-bottom: 0;">
+              <div class="field-label">Participação e relato de obra com risco de desprendimento de revestimento</div>
+              <div class="field-value" style="background-color: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; margin-top: 4px; font-style: italic;">
+                ${getVal(data.obraRiscoDesprendimentoExplique)}
+              </div>
+            </div>
           </div>
 
           <!-- ETAPA 6 -->
