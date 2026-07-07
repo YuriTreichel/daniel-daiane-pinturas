@@ -86,6 +86,7 @@ interface FormData {
   indicacaoQuem: string;
   videoApresentacao: File | null;
   situacaoDificilObra: string;
+  aceitaLgpd: boolean;
 }
 
 const initialFormData: FormData = {
@@ -140,7 +141,8 @@ const initialFormData: FormData = {
   possuiIndicacao: '',
   indicacaoQuem: '',
   videoApresentacao: null,
-  situacaoDificilObra: ''
+  situacaoDificilObra: '',
+  aceitaLgpd: false
 };
 
 interface TrabalheConoscoProps {
@@ -198,12 +200,16 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    let formattedValue = value;
+    const { name, value, type } = e.target;
+    let formattedValue: any = value;
 
-    if (name === 'cpf') formattedValue = formatCPF(value);
-    if (name === 'telefone') formattedValue = formatPhone(value);
-    if (name === 'dataNascimento') formattedValue = formatBirthDate(value);
+    if (type === 'checkbox') {
+      formattedValue = (e.target as HTMLInputElement).checked;
+    } else {
+      if (name === 'cpf') formattedValue = formatCPF(value);
+      if (name === 'telefone') formattedValue = formatPhone(value);
+      if (name === 'dataNascimento') formattedValue = formatBirthDate(value);
+    }
 
     setFormData(prev => ({
       ...prev,
@@ -412,6 +418,9 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
         newErrors.indicacaoQuem = 'Informe o nome de quem o indicou.';
       }
       if (!formData.situacaoDificilObra.trim()) newErrors.situacaoDificilObra = 'Este campo é obrigatório.';
+      if (!formData.aceitaLgpd) {
+        newErrors.aceitaLgpd = 'Você precisa declarar que está ciente da LGPD para enviar.';
+      }
     }
 
     setErrors(newErrors);
@@ -1839,6 +1848,32 @@ export const TrabalheConosco = ({ isOpen, onClose }: TrabalheConoscoProps) => {
                             </p>
                           )}
                         </div>
+                      </div>
+
+                      {/* LGPD Consent Disclaimer */}
+                      <div className={`p-6 rounded-2xl border transition-all ${
+                        errors.aceitaLgpd 
+                          ? 'border-red-500 bg-red-50/10' 
+                          : 'border-gray-200 bg-gray-50/30'
+                      }`}>
+                        <div className="flex items-start gap-3">
+                          <input 
+                            type="checkbox" 
+                            id="aceitaLgpd" 
+                            name="aceitaLgpd"
+                            checked={formData.aceitaLgpd}
+                            onChange={handleChange}
+                            className="mt-1 w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-gray-300 cursor-pointer"
+                          />
+                          <label htmlFor="aceitaLgpd" className="text-sm text-gray-700 leading-relaxed cursor-pointer select-none">
+                            <strong>Declaração de Consentimento (LGPD):</strong> Declaro estar ciente e de acordo que o tratamento de meus dados pessoais fornecidos neste formulário observará estritamente as disposições da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados - LGPD) para finalidade exclusiva de avaliação em processos de seleção e contratação.
+                          </label>
+                        </div>
+                        {errors.aceitaLgpd && (
+                          <p className="text-xs text-red-500 mt-2.5 flex items-center gap-1">
+                            <AlertCircle size={14} /> {errors.aceitaLgpd}
+                          </p>
+                        )}
                       </div>
                     </div>
                   )}

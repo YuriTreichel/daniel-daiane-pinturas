@@ -407,6 +407,12 @@ $html = "
             </td>
           </tr>
         </table>
+        <div style=\"margin-top: 16px; padding-top: 12px; border-top: 1px solid #E2E8F0;\">
+          <div class=\"field-label\">Consentimento LGPD</div>
+          <div class=\"field-value\" style=\"color: #2D3748; font-weight: bold;\">
+            ✓ O candidato declarou estar ciente e de acordo com o tratamento de seus dados pessoais conforme as disposições da Lei nº 13.709/2018 (LGPD).
+          </div>
+        </div>
       </div>
 
     </div>
